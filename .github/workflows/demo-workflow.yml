@@ -1,8 +1,16 @@
-name: Hello Quality Team
+name: Hello Quality Team or Experts
 
-# This enables the manual trigger via the GitHub UI
 on:
   workflow_dispatch:
+    inputs:
+      greeting_option:
+        description: 'Choose the greeting message'
+        required: true
+        default: 'team'
+        type: choice
+        options:
+          - team
+          - experts
 
 jobs:
   hello-world:
@@ -12,5 +20,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Say Hello
-        run: echo "Hello Quality Team"
+      - name: Output greeting
+        run: |
+          if [ "${{ github.event.inputs.greeting_option }}" == "team" ]; then
+            echo "Hello Quality Team"
+          else
+            echo "Hello Quality Experts"
+          fi
