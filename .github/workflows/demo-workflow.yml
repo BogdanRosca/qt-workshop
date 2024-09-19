@@ -1,16 +1,16 @@
-name: Hello Quality Team or Experts
+name: PR Greeting with Comment
 
+# Trigger the workflow only when a pull request is opened
 on:
-  workflow_dispatch:
-    inputs:
-      greeting_option:
-        description: 'Choose the greeting message'
-        required: true
-        default: 'team'
-        type: choice
-        options:
-          - team
-          - experts
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+# Ensure the GitHub token has write access to pull requests and contents
+permissions:
+  pull-requests: write
+  contents: write
 
 jobs:
   hello-world:
@@ -20,10 +20,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Output greeting
+      - name: Choose the greeting message
+        id: choose-message
         run: |
-          if [ "${{ github.event.inputs.greeting_option }}" == "team" ]; then
-            echo "Hello Quality Team"
+          if [ "${{ github.event.pull_request.user.login }}" == "team" ]; then
+            echo "::set-output name=message::Hello Quality Team"
           else
-            echo "Hello Quality Experts"
+            echo "::set-output name=message::Hello Quality Experts"
           fi
+
+      - name: Post greeting as a PR comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub automatically provides this token
+        run: |
+          curl -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"body\":\"${{ steps.choose-message.outputs.message }}\"}" \
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
