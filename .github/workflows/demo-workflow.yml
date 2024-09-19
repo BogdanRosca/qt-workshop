@@ -1,23 +1,24 @@
-name: CI Workflow  # Name of the workflow
+name: Hello Quality Team
 
-# Trigger the workflow when code is pushed or pull requests are made to the 'main' branch
+# This workflow will run when a push or pull request is made to the main branch.
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
-# Define the jobs in this workflow
+# Define the jobs that run in the workflow
 jobs:
-  build:
-    runs-on: ubuntu-latest  # Specify the operating system
+  hello-world:
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3  # Checkout the repository
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Tests
-        run: npm test
+      # Checkout the repository to the runner
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Print "Hello Quality Team" to the console
+      - name: Say Hello
+        run: echo "Hello Quality Team"
