@@ -1,24 +1,16 @@
 name: Hello Quality Team
 
-# This workflow will run when a push or pull request is made to the main branch.
+# This enables the manual trigger via the GitHub UI
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
-# Define the jobs that run in the workflow
 jobs:
   hello-world:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository to the runner
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Print "Hello Quality Team" to the console
       - name: Say Hello
         run: echo "Hello Quality Team"
