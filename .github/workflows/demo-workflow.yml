@@ -6,6 +6,11 @@ on:
     types:
       - opened
 
+# Ensure the GitHub token has write access to pull requests and contents
+permissions:
+    pull-requests: write
+    contents: write
+
 jobs:
   hello-world:
     runs-on: ubuntu-latest
