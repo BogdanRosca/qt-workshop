@@ -9,8 +9,8 @@ on:
 
 # Ensure the GitHub token has write access to pull requests and contents
 permissions:
-    pull-requests: write
-    contents: write
+  pull-requests: write
+  contents: write
 
 jobs:
   hello-world:
@@ -37,4 +37,4 @@ jobs:
           -H "Authorization: token $GITHUB_TOKEN" \
           -H "Content-Type: application/json" \
           -d "{\"body\":\"${{ steps.choose-message.outputs.message }}\"}" \
-          "${{ github.event.pull_request.url }}/comments"
+          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
