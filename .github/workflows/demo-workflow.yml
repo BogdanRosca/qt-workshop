@@ -1,4 +1,4 @@
-name: PR Greeting
+name: PR Greeting with Comment
 
 # Trigger the workflow only when a pull request is opened
 on:
@@ -14,10 +14,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Output greeting based on PR
+      - name: Choose the greeting message
+        id: choose-message
         run: |
           if [ "${{ github.event.pull_request.user.login }}" == "team" ]; then
-            echo "Hello Quality Team"
+            echo "::set-output name=message::Hello Quality Team"
           else
-            echo "Hello Quality Experts"
+            echo "::set-output name=message::Hello Quality Experts"
           fi
+
+      - name: Post greeting as a PR comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub automatically provides this token
+        run: |
+          curl -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"body\":\"${{ steps.choose-message.outputs.message }}\"}" \
+          "${{ github.event.pull_request.url }}/comments"
