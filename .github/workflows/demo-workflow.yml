@@ -5,6 +5,7 @@ on:
   pull_request:
     types:
       - opened
+      - synchronize
 
 # Ensure the GitHub token has write access to pull requests and contents
 permissions:
